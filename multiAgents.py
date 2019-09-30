@@ -73,7 +73,16 @@ class ReflexAgent(Agent):
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
+
         "*** YOUR CODE HERE ***"
+        # Eating food is great
+        eval = successorGameState.getScore() # Tracks if it has eaten food or not
+        # Near food is good
+        eval = eval + (farF - closeF)
+        # Near ghost is bad
+        # Near ghost is not bad if ghost is scared
+        if newScaredTimes[0] != 0:
+          eval = eval - closeGhost
         return successorGameState.getScore()
 
 def scoreEvaluationFunction(currentGameState):
