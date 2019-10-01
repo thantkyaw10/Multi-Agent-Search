@@ -1,0 +1,11 @@
+*.pyc
+*.lay
+*.solution
+*.test
+test_cases/CONFIG
+test_cases/q1/CONFIG
+test_cases/q2/CONFIG
+test_cases/q3/CONFIG
+test_cases/q4/CONFIG
+test_cases/q5/CONFIG
+test_cases/extra/CONFIG
