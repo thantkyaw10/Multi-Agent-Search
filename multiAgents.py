@@ -86,7 +86,6 @@ class ReflexAgent(Agent):
         
         eval = successorGameState.getScore() # Tracks if it has eaten food or not
         # # Eating food is great --> Nearest food is main focus
-        temp = 0
         # Near ghost is bad
         # Near ghost is not bad if ghost is scared
         if closeG[0].scaredTimer == 0 and closeG[1] < 3:
