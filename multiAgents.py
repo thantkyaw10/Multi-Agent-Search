@@ -14,6 +14,7 @@
 
 from util import manhattanDistance
 from game import Directions
+from operator import itemgetter
 import random, util
 
 from game import Agent
@@ -146,7 +147,29 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        exploredD = 0 # Instantiate explored depth to 0
+        def Minimax(state, exploredD):
+          if state.isWin() or state.isLose() or exploredD == self.depth * state.getNumAgents(): # Checks terminal or depth
+            return self.evaluationFunction(state) 
+          agentIndex = exploredD % state.getNumAgents() #Calculates agent index
+          if agentIndex == 0: # If pacman return max
+            evaledA = {} # Dictionary of key = eval, val = action
+            exploredD = exploredD + 1 # Updates explored depth
+            for a in state.getLegalActions(agentIndex): # Iterates through legal actions
+              tupe = Minimax(state.generateSuccessor(agentIndex, a),exploredD) # Calculates next value / action pair
+              evaledA[tupe] = a # Assigns the action to its value key in dict
+            maxK = max(evaledA.keys()) # Calculates max key value
+            return maxK, evaledA[maxK] # Returns the max key value and its associated action
+          else: # Same thing but takes minimum value
+            evaledA = {}
+            exploredD = exploredD + 1
+            for a in state.getLegalActions(agentIndex):
+              tupe = Minimax(state.generateSuccessor(agentIndex, a),exploredD)
+              evaledA[tupe] = a
+            minK = min(evaledA.keys())
+            return minK, evaledA[minK]
+        ans = Minimax(gameState, exploredD)
+        return ans[1] # Returns the action
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
