@@ -84,17 +84,14 @@ class ReflexAgent(Agent):
         if len(newGhostStates) != 0:
           closeG = min((gho, manhattanDistance(newPos, gho.getPosition())) for gho in newGhostStates) #closeG = (closest ghost, distance to closest ghost)
         
-        # Eating food is great
         eval = successorGameState.getScore() # Tracks if it has eaten food or not
-        # Near food is good
+        # # Eating food is great --> Nearest food is main focus
         temp = 0
-        if newScaredTimes[0] == 0 and closeG[1] < 3:
-          temp = closeG[1]
-        
-        eval = eval + (1/(temp+closeF[1]+1))
         # Near ghost is bad
         # Near ghost is not bad if ghost is scared
-        
+        if closeG[0].scaredTimer == 0 and closeG[1] < 3:
+          eval = eval - (closeG[1]*20)
+        eval = eval + 1.0/(closeF[1]+1) #+1 so don't ever get zero division error
         return eval
 
 def scoreEvaluationFunction(currentGameState):
