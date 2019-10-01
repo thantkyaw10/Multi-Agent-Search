@@ -90,7 +90,7 @@ class ReflexAgent(Agent):
         # Near ghost is bad
         # Near ghost is not bad if ghost is scared
         if closeG[0].scaredTimer == 0 and closeG[1] < 3:
-          eval = eval - (closeG[1]*20)  #being close to a ghost is really bad
+          eval = eval - (closeG[1]*25)  #being close to a ghost is really bad
         eval = eval + 1.0/(closeF[1]+1) #+1 so don't ever get zero division error
         return eval
 
