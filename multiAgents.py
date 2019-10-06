@@ -243,7 +243,31 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        exploredD = 0
+        def Minimax(state, exploredD):
+          if state.isWin() or state.isLose() or exploredD == self.depth * state.getNumAgents(): # Checks terminal or depth
+            return self.evaluationFunction(state) 
+          agentIndex = exploredD % state.getNumAgents() #Calculates agent index
+          if agentIndex == 0: # If pacman return max
+            evaledA = {} # Dictionary of key = eval, val = action
+            exploredD = exploredD + 1 # Updates explored depth
+            for a in state.getLegalActions(agentIndex): # Iterates through legal actions
+              tupe = Minimax(state.generateSuccessor(agentIndex, a),exploredD) # Calculates next value / action pair
+              evaledA[tupe] = a # Assigns the action to its value key in dict
+            maxK = max(evaledA.keys()) # Calculates max key value
+            if exploredD == 1: # Only returns the key value pair if its the first call
+              return maxK, evaledA[maxK] # Returns the max key value and its associated action
+            return maxK
+          else: # Same thing but takes minimum value
+            evaledA = {}
+            exploredD = exploredD + 1
+            for a in state.getLegalActions(agentIndex):
+              tupe = Minimax(state.generateSuccessor(agentIndex, a),exploredD) 
+              evaledA[tupe] = a # No reason to assign to dictionary, a list of evales will do but i'm too lazy to change it
+            avgK = float(sum(evaledA.keys()) / len(evaledA.keys())) #Calculates avgK
+            return avgK
+        ans = Minimax(gameState, exploredD)
+        return ans[1] # Returns the action
 
 def betterEvaluationFunction(currentGameState):
     """
