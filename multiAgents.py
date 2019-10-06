@@ -181,7 +181,54 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
           Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        exploredD = 0
+        
+        def maxValue(state, exploredD, alpha, beta):
+          if state.isWin() or state.isLose() or exploredD == self.depth * state.getNumAgents(): # Checks terminal or depth
+            return self.evaluationFunction(state) 
+          v = float("-inf")
+          agentIndex = exploredD % state.getNumAgents()
+          evaledA = {} # Dictionary of key = eval, val = action
+          exploredD = exploredD + 1 # Updates explored depth
+          for a in state.getLegalActions(agentIndex): # Iterates through legal actions
+            tupe = minValue(state.generateSuccessor(agentIndex, a),exploredD, alpha, beta) # Calculates next value / action pair
+            if type(tupe) is float: # Check type of tupe for return type reasons
+              evaledA[tupe] = a
+            else:
+              evaledA[tupe[0]] = a # Assigns the action to its value key in dict
+            v = max(evaledA.keys()) # Calculates max key value
+            if v > beta: # Checks for beta and returns (prunes) if out of bounds
+              return v, evaledA[v]
+            if v > alpha: # Updates alpha if new upperbound
+              alpha = v
+          return v, evaledA[v] # Returns the max key value and its associated action
+
+        def minValue(state, exploredD, alpha, beta):
+          if state.isWin() or state.isLose() or exploredD == self.depth * state.getNumAgents(): # Checks terminal or depth
+            return self.evaluationFunction(state)
+          v = float("inf")
+          agentIndex = exploredD % state.getNumAgents()
+          evaledA = {} # Dictionary of key = eval, val = action
+          exploredD = exploredD + 1 # Updates explored depth
+          for a in state.getLegalActions(agentIndex): # Iterates through legal actions
+            tupe = ()
+            if (agentIndex + 1) % state.getNumAgents() != 0: # If next agent is ghost take min value again
+              tupe = minValue(state.generateSuccessor(agentIndex, a),exploredD, alpha, beta) # Calculates next value / action pair
+            else:
+              tupe = maxValue(state.generateSuccessor(agentIndex, a),exploredD, alpha, beta)
+            if type(tupe) is float:
+              evaledA[tupe] = a
+            else:
+              evaledA[tupe[0]] = a # Assigns the action to its value key in dict
+            v = min(evaledA.keys()) # Calculates max key value
+            if v < alpha: # Checks for alpha and prunes if out of bounds
+              return v, evaledA[v]
+            if v < beta: # Updates beta if new lower bound
+              beta = v
+          return v, evaledA[v] # Returns the max key value and its associated action
+        
+        ans = maxValue(gameState, exploredD, float("-inf"), float("inf"))
+        return ans[1] # Returns the action
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
