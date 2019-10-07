@@ -285,10 +285,10 @@ def betterEvaluationFunction(currentGameState):
     if len(currentGameState.getGhostStates()) != 0: 
       #closest ghost
       closeGhost = min(manhattanDistance(ghost.getPosition(), pos) for ghost in currentGameState.getGhostStates())
-    if(closeGhost != 0):
-      closeGhost = -200
-    distFood = min(manhattanDistance(foo,pos) for foo in food)
-    return currentGameState.getScore() - closeGhost + 300/(distFood+len(food)+1)
+    #f(closeGhost != 0):
+    #  closeGhost = 20/(closeGhost+1)
+    distFood = min(0, (manhattanDistance(foo,pos) for foo in food))
+    return currentGameState.getScore() - closeGhost + 100/(len(food)+1) + 70/(distFood+1)
 
 # Abbreviation
 better = betterEvaluationFunction
