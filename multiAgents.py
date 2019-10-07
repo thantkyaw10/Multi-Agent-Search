@@ -279,19 +279,16 @@ def betterEvaluationFunction(currentGameState):
     "*** YOUR CODE HERE ***"
     food = currentGameState.getFood().asList() #food as a list of food coordinates
     pos = currentGameState.getPacmanPosition() #paman's current position
-    distGhost = 0 #distance to the closest ghost
-    ghosts = [] #list of ghosts relevant to evaluation
+    closeGhost = 0 #Penalty for threateningly close ghost
 
-    #ignore ghosts that are not theateningly close
-    for ghost in currentGameState.getGhostStates(): #of the ghosts in the game, they are relevant to evaluation if they are threateningly close and are not scared
-      if ghost.scaredTimer == 0 and manhattanDistance(ghost.getPosition(), pos) < 4:
-        ghosts = ghosts + [ghost]
-      distGhost = min(manhattanDistance(ghost.getPosition(), pos))
-    distFood = min(0, (manhattanDistance(foo,pos) for foo in food))
-    return currentGameState.getScore() - distGhost + 20/(distFood+1 + len(food))
-
-
-    util.raiseNotDefined()
+    #of the ghosts in the game, they are relevant to evaluation if they are threateningly close and are not scared
+    if len(currentGameState.getGhostStates()) != 0: 
+      #closest ghost
+      closeGhost = min(manhattanDistance(ghost.getPosition(), pos) for ghost in currentGameState.getGhostStates())
+    if(closeGhost != 0):
+      closeGhost = -200
+    distFood = min(manhattanDistance(foo,pos) for foo in food)
+    return currentGameState.getScore() - closeGhost + 300/(distFood+len(food)+1)
 
 # Abbreviation
 better = betterEvaluationFunction
